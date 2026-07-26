@@ -14,14 +14,16 @@
 
         :root {
             --primary: #1a5e2a;
-            --primary-light: #2e7d39;
-            --gold: #d4a843;
-            --bg: #f4f6f9;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --radius: 12px;
-            --text: #222;
-            --text-light: #555;
+            --primary-dark: #13421e;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --bg: #f2f5f0;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --text: #1e2a1e;
+            --text-light: #4a5a4a;
+            --border-light: #e2ebe2;
         }
 
         body {
@@ -30,7 +32,7 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            background-color: #eaf7e0;
+            background-color: #dce8d4;
             background-blend-mode: overlay;
             color: var(--text);
             padding-top: 60px;
@@ -40,7 +42,7 @@
 
         @supports (background-image: url('grass.jpg')) {
             body {
-                background-image: url('grass.jpg'), linear-gradient(135deg, #d4e9c0, #f0f9ec);
+                background-image: url('grass.jpg'), linear-gradient(145deg, #dce8d4, #eef5ea);
                 background-blend-mode: overlay, normal;
             }
         }
@@ -58,8 +60,8 @@
             align-items: center;
             padding: 6px 0;
             z-index: 200;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+            border-bottom: 3px solid var(--gold);
         }
 
         .nav-item {
@@ -67,23 +69,27 @@
             flex-direction: column;
             align-items: center;
             font-size: 10px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.75);
             background: none;
             border: none;
             padding: 4px 6px;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
             min-width: 44px;
+            border-radius: 8px;
         }
-
         .nav-item .icon {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 1px;
+            transition: transform 0.2s;
         }
-
         .nav-item.active {
             color: white;
             font-weight: 600;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .nav-item:active .icon {
+            transform: scale(0.9);
         }
 
         /* ===== 页面容器 ===== */
@@ -92,202 +98,392 @@
             padding: 12px 12px 16px;
             max-width: 600px;
             margin: 0 auto;
-            animation: fadeUp 0.25s ease;
+            animation: fadeUp 0.3s ease;
         }
         .page.active {
             display: block;
         }
 
         @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(8px); }
+            0% { opacity: 0; transform: translateY(12px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 卡片 ===== */
+        /* ===== 卡片 – 通用 ===== */
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            padding: 18px 16px 16px;
+            margin-bottom: 18px;
             box-shadow: var(--shadow);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.25s;
+        }
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            opacity: 0.7;
         }
 
         .card-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: var(--primary);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 6px;
+            gap: 8px;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 10px;
+            letter-spacing: 0.3px;
         }
-
-        .badge {
-            display: inline-block;
+        .card-title .badge {
             background: var(--gold);
-            color: #222;
+            color: #1e2a1e;
             font-size: 11px;
             font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 20px;
+            padding: 2px 12px;
+            border-radius: 30px;
             margin-left: auto;
+            letter-spacing: 0.5px;
         }
 
+        /* ===== 信息网格 ===== */
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px 12px;
-            font-size: 13px;
+            gap: 6px 16px;
+            font-size: 14px;
+            padding: 4px 0;
         }
-        .info-grid .label { color: var(--text-light); font-weight: 500; }
-        .info-grid .value { font-weight: 600; text-align: right; }
+        .info-grid .label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .info-grid .value {
+            font-weight: 600;
+            text-align: right;
+            color: var(--primary-dark);
+        }
 
-        /* ===== 表格 ===== */
+        .highlight-box {
+            background: #f0f7eb;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--gold);
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 15px;
+        }
+
+        hr.divider {
+            margin: 14px 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        /* ===== 表格美化 ===== */
         .table-wrap {
             overflow-x: auto;
-            font-size: 12px;
+            margin: 0 -4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            background: white;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 13px;
             min-width: 420px;
         }
         th {
             background: var(--primary);
             color: white;
-            padding: 6px 4px;
+            padding: 10px 6px;
             text-align: center;
-            font-weight: 600;
-            font-size: 11px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.3px;
             white-space: nowrap;
         }
+        th:first-child { border-radius: 12px 0 0 0; }
+        th:last-child { border-radius: 0 12px 0 0; }
         td {
-            padding: 6px 4px;
+            padding: 9px 6px;
             text-align: center;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #ecf3ec;
+            vertical-align: middle;
+            background-color: white;
         }
         tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td {
+            background-color: #f8fbf7;
+        }
+        td strong {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
 
         /* ===== 按钮 ===== */
         .btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             touch-action: manipulation;
+            box-shadow: 0 2px 6px rgba(26, 94, 42, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.3px;
         }
-        .btn-sm { padding: 4px 10px; font-size: 11px; }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(26, 94, 42, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 12px;
+        }
         .btn-outline {
             background: transparent;
-            border: 1.5px solid var(--primary);
+            border: 2px solid var(--primary);
             color: var(--primary);
+            box-shadow: none;
         }
         .btn-outline:hover {
             background: var(--primary);
             color: white;
+            box-shadow: 0 4px 12px rgba(26, 94, 42, 0.2);
         }
         .btn-gold {
             background: var(--gold);
-            color: #222;
+            color: #1e2a1e;
+            box-shadow: 0 2px 8px rgba(201, 168, 76, 0.3);
+        }
+        .btn-gold:hover {
+            background: #b8993a;
+            box-shadow: 0 4px 14px rgba(201, 168, 76, 0.4);
         }
         .btn-danger {
             background: #c0392b;
-            color: white;
+            box-shadow: 0 2px 6px rgba(192, 57, 43, 0.25);
+        }
+        .btn-danger:hover {
+            background: #a93226;
         }
         .btn-blue {
-            background: #2980b9;
-            color: white;
+            background: #2c7a9e;
+            box-shadow: 0 2px 6px rgba(44, 122, 158, 0.25);
+        }
+        .btn-blue:hover {
+            background: #1f5f7a;
         }
         .btn-orange {
-            background: #e67e22;
-            color: white;
+            background: #d97a2b;
+            box-shadow: 0 2px 6px rgba(217, 122, 43, 0.25);
+        }
+        .btn-orange:hover {
+            background: #bf661f;
         }
 
         .input-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin: 6px 0 4px;
+            gap: 8px;
+            margin: 8px 0 4px;
             align-items: center;
         }
         .input-group input,
         .input-group select {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 10px 14px;
+            border: 2px solid var(--border-light);
+            border-radius: 30px;
+            font-size: 14px;
             flex: 1 1 100px;
             min-width: 80px;
             background: white;
+            transition: border 0.2s;
+            outline: none;
+        }
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--gold);
         }
 
+        /* ===== 比赛卡片 (录入页) ===== */
         .match-card {
-            border: 1px solid #eaeaea;
-            border-radius: 10px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            background: #fafbfc;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: white;
+            transition: all 0.2s;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .match-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
         }
         .match-card .row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 6px;
         }
-        .match-card .teams { font-weight: 700; font-size: 14px; }
+        .match-card .teams {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--primary-dark);
+        }
         .match-card .score {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--primary);
-            background: white;
-            padding: 0 10px;
-            border-radius: 6px;
-            min-width: 44px;
+            background: #f2f7ef;
+            padding: 0 14px;
+            border-radius: 30px;
+            min-width: 50px;
             text-align: center;
+            line-height: 1.6;
         }
         .match-card .meta {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-light);
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
         }
 
-        /* ===== 球员 ===== */
-        .player-chip {
-            display: inline-block;
-            background: #eef3ee;
-            padding: 4px 12px 4px 10px;
-            border-radius: 30px;
-            margin: 3px 4px 3px 0;
-            font-size: 13px;
-            font-weight: 500;
-            border: 1px solid #d0dcd0;
-        }
-        .player-chip .del {
-            margin-left: 6px;
-            cursor: pointer;
-            color: #999;
-            font-weight: 700;
-        }
-        .player-chip .del:hover { color: #c0392b; }
+        /* ===== 球员管理 – 全新卡片式设计 ===== */
 
+        /* 每支球队的容器 */
         .team-group {
-            margin-bottom: 14px;
+            margin-bottom: 18px;
+            background: rgba(248, 251, 247, 0.7);
+            border-radius: 16px;
+            padding: 14px 14px 16px;
+            border: 1px solid var(--border-light);
+            transition: box-shadow 0.2s;
         }
-        .team-group h4 {
-            color: var(--primary);
-            border-left: 4px solid var(--gold);
-            padding-left: 8px;
-            margin-bottom: 6px;
+        .team-group:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ---- 球队名卡片 ---- */
+        .team-name-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f4f9f0, #eaf3e5);
+            border: 2px solid var(--primary);
+            border-radius: 14px;
+            padding: 10px 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(26, 94, 42, 0.08);
+            transition: all 0.2s;
+        }
+        .team-name-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(26, 94, 42, 0.12);
+        }
+        .team-name-card .name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+        }
+        .team-name-card .count {
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            padding: 2px 16px;
             font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---- 球员卡片网格 ---- */
+        .players-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* 球员卡片 */
+        .player-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border-radius: 12px;
+            padding: 8px 14px 8px 18px;
+            border: 1.5px solid #dde8dd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s;
+            flex: 0 1 auto;
+            min-width: 80px;
+            max-width: 100%;
+        }
+        .player-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            transform: translateY(-2px);
+        }
+        .player-card .name {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text);
+            margin-right: 10px;
+        }
+        .player-card .del-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 17px;
+            cursor: pointer;
+            padding: 0 2px;
+            line-height: 1;
+            transition: color 0.2s, transform 0.15s;
+        }
+        .player-card .del-btn:hover {
+            color: #c0392b;
+            transform: scale(1.2);
+        }
+
+        .no-players {
+            color: #aaa;
+            font-size: 13px;
+            padding: 8px 4px;
+            display: block;
+            width: 100%;
+            text-align: center;
         }
 
         /* ===== 排行榜 ===== */
@@ -299,78 +495,124 @@
         .rank-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 8px;
-            background: #f8f9fa;
+            padding: 6px 12px;
+            background: #f8fbf7;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 14px;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: background 0.2s;
+        }
+        .rank-item:nth-child(odd) {
+            background: #f2f7ef;
         }
         .rank-item .pos {
             font-weight: 700;
-            width: 24px;
+            width: 28px;
             color: var(--gold);
+            text-align: center;
         }
-        .rank-item .name { flex: 1; font-weight: 500; }
-        .rank-item .stat { font-weight: 700; color: var(--primary); }
+        .rank-item .name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .rank-item .stat {
+            font-weight: 700;
+            color: var(--primary-dark);
+            background: white;
+            padding: 0 12px;
+            border-radius: 30px;
+            line-height: 1.8;
+            min-width: 40px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
 
-        /* ===== 底部图片（三张一行） ===== */
+        /* ===== 底部图片 ===== */
         .footer-gallery {
             margin-top: 20px;
-            padding: 12px 0;
-            border-top: 1px solid #ddd;
+            padding: 14px 0 8px;
+            border-top: 2px solid var(--border-light);
             background: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.4);
         }
         .footer-gallery .title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary-dark);
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
         .gallery-grid {
             display: flex;
             gap: 10px;
             justify-content: space-around;
-            padding: 0 4px;
+            padding: 0 6px;
         }
         .gallery-item {
             flex: 1;
             min-width: 0;
             text-align: center;
-            background: #f8f9fa;
-            border-radius: 8px;
+            background: #f8fbf7;
+            border-radius: 12px;
             padding: 6px;
+            border: 1px solid var(--border-light);
+            transition: transform 0.2s;
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
         }
         .gallery-item img {
             width: 100%;
             height: auto;
             aspect-ratio: 16/9;
             object-fit: cover;
-            border-radius: 6px;
+            border-radius: 8px;
             background: #ddd;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
         .gallery-item .caption {
             font-size: 12px;
             color: var(--text-light);
-            margin-top: 4px;
+            margin-top: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 500;
         }
 
+        /* ===== 移动端微调 ===== */
         @media (max-width: 480px) {
             .info-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 4px 8px;
-                font-size: 12px;
+                gap: 4px 10px;
+                font-size: 13px;
             }
-            .match-card .teams { font-size: 13px; }
-            .match-card .score { font-size: 15px; min-width: 36px; }
-            table { min-width: 360px; }
+            .match-card .teams { font-size: 14px; }
+            .match-card .score { font-size: 16px; min-width: 40px; }
+            table { min-width: 360px; font-size: 12px; }
             .gallery-grid { gap: 6px; }
             .gallery-item { padding: 4px; }
             .gallery-item .caption { font-size: 10px; }
+            .btn { font-size: 13px; padding: 6px 14px; }
+            .card { padding: 14px 12px; }
+
+            /* 球员卡片手机自适应 */
+            .player-card {
+                flex: 1 0 calc(50% - 8px);
+                min-width: 70px;
+            }
+            .team-name-card .name { font-size: 15px; }
+            .team-name-card .count { font-size: 12px; padding: 0 12px; }
+        }
+        @media (min-width: 481px) {
+            .player-card {
+                flex: 0 1 auto;
+            }
         }
     </style>
 </head>
@@ -393,9 +635,7 @@
             <!-- 关键信息 -->
             <div class="card">
                 <div class="card-title">📋 荔中校友足球联队8月杯赛 - 关键信息</div>
-                <div style="background:#f0f7f0; padding:10px; border-radius:10px; margin-bottom:10px;">
-                    <p style="font-weight:700; color:var(--primary); font-size:14px;">🏆 8月杯赛 · 双循环共6轮</p>
-                </div>
+                <div class="highlight-box">🏆 8月杯赛 · 双循环共6轮</div>
                 <div class="info-grid">
                     <span class="label">📅 周一</span>
                     <span class="value">20:30 – 22:30</span>
@@ -408,7 +648,7 @@
                     <span class="label" style="grid-column:1;">⏱️ 第四节</span>
                     <span class="value" style="grid-column:2;">22:00 (下半场2)</span>
                 </div>
-                <hr style="margin:10px 0; border:1px dashed #ddd;">
+                <hr class="divider">
                 <div class="info-grid">
                     <span class="label">📅 周五</span>
                     <span class="value">18:30 – 20:30</span>
@@ -427,8 +667,8 @@
             <div class="card">
                 <div class="card-title">📢 赛事预告 <span class="badge">最新</span></div>
                 <div id="announcementList"></div>
-                <div style="margin-top:8px;">
-                    <input type="text" id="announceInput" placeholder="添加新预告..." style="padding:6px 10px; border:1px solid #ccc; border-radius:20px; width:70%; font-size:13px;">
+                <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="announceInput" placeholder="添加新预告..." style="flex:1; padding:8px 14px; border:2px solid var(--border-light); border-radius:30px; font-size:13px; outline:none; transition:border 0.2s;">
                     <button class="btn btn-sm" onclick="addAnnounce()">发布</button>
                 </div>
             </div>
@@ -465,12 +705,12 @@
         <section id="page-admin" class="page">
             <div class="card">
                 <div class="card-title">✍️ 数据录入台</div>
-                <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">点击场次卡片录入比分、进球及助攻（无需时间）</p>
+                <p style="font-size:14px; color:var(--text-light); margin-bottom:14px;">点击场次卡片录入比分、进球及助攻（无需时间）</p>
                 <div id="adminMatchList"></div>
             </div>
         </section>
 
-        <!-- 球员管理 -->
+        <!-- 球员管理（卡片式球队名+球员名） -->
         <section id="page-players" class="page">
             <div class="card">
                 <div class="card-title">👥 球员管理 <span class="badge" id="playerCount">0</span></div>
@@ -484,8 +724,8 @@
                     </select>
                     <button class="btn" onclick="addPlayer()">➕ 添加</button>
                 </div>
-                <div style="margin-top:10px;">
-                    <label style="font-weight:600; font-size:13px;">🔄 转会 (转入/转出)</label>
+                <div style="margin-top:14px;">
+                    <label style="font-weight:600; font-size:14px; color:var(--text-light); display:block; margin-bottom:4px;">🔄 转会 (转入/转出)</label>
                     <div class="input-group">
                         <select id="transferPlayerSelect" style="flex:2;"><option value="">-- 选择球员 --</option></select>
                         <select id="transferTeamSelect">
@@ -497,16 +737,16 @@
                         <button class="btn btn-gold" onclick="transferPlayer()">确认转会</button>
                     </div>
                 </div>
-                <hr style="margin:12px 0;">
+                <hr class="divider">
+                <!-- 球队及球员列表将动态渲染到这里 -->
                 <div id="teamRoster"></div>
-                <!-- ===== 数据导入/导出 ===== -->
-                <hr style="margin:16px 0; border-top:2px dashed #ccc;">
-                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+                <hr class="divider">
+                <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
                     <button class="btn btn-blue" onclick="exportData()">📤 导出数据</button>
                     <button class="btn btn-orange" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
                     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
                 </div>
-                <p style="font-size:12px; color:var(--text-light); text-align:center; margin-top:8px;">导出的数据可用于在不同设备间同步</p>
+                <p style="font-size:12px; color:var(--text-light); text-align:center; margin-top:10px;">导出的数据可用于在不同设备间同步</p>
             </div>
         </section>
 
@@ -533,7 +773,7 @@
         // ---------- 常量 ----------
         const TEAMS = ['鱼腩队', '先锋队', '快乐队', '战魂队'];
         const TEAM_SHORT = { '鱼腩队': '鱼腩', '先锋队': '先锋', '快乐队': '快乐', '战魂队': '战魂' };
-        const DATA_VERSION = 'v3';   // 升级版本，强制重置赛程（日期修正）
+        const DATA_VERSION = 'v3';
         const VENUE = '夏街';
 
         // ---------- 存储工具 ----------
@@ -549,22 +789,16 @@
         let matches = loadData('matches', []);
         let announcements = loadData('announcements', ['⚡ 8月3日（周一）揭幕战：鱼腩队 vs 先锋队', '🏅 8月21日（周五）颁奖之夜']);
 
-        // ---------- 初始化赛程（修正日期） ----------
+        // ---------- 初始化赛程 ----------
         function initSchedule() {
             const storedVersion = localStorage.getItem('lc_version');
             let needReset = false;
-            if (storedVersion !== DATA_VERSION) {
-                needReset = true;
-            } else if (matches.length > 0) {
-                // 检查第一场比赛的日期是否正确（8月3日周一，第三场应该是8月7日周五）
+            if (storedVersion !== DATA_VERSION) needReset = true;
+            else if (matches.length > 0) {
                 const first = matches[0];
-                if (first && first.date !== '8月3日') {
-                    needReset = true;
-                }
+                if (first && first.date !== '8月3日') needReset = true;
             }
-
             if (needReset) {
-                // 根据2026年8月正确日期定义
                 const rounds = [
                     { date: '8月3日', day: '周一', time: '20:30', home: 0, away: 1 },
                     { date: '8月3日', day: '周一', time: '21:00', home: 2, away: 3 },
@@ -579,7 +813,6 @@
                     { date: '8月21日', day: '周五', time: '18:30', home: 0, away: 3 },
                     { date: '8月21日', day: '周五', time: '19:00', home: 1, away: 2 }
                 ];
-
                 matches = rounds.map((r, idx) => ({
                     id: 'm' + (idx + 1),
                     round: Math.floor(idx / 2) + 1,
@@ -682,19 +915,22 @@
                         <span class="teams">${homeDisplay} vs ${awayDisplay}</span>
                         <span class="score">${sc}</span>
                     </div>
-                    <div class="row meta">
+                    <div class="meta">
                         <span>第${m.round}轮 · ${m.date} ${m.day} ${m.time}</span>
-                        <span style="font-size:11px; color:#888;">⚽ ${eventsHtml}</span>
+                        <span style="color:#888;">⚽ ${eventsHtml}</span>
                     </div>
                 </div>`;
             });
             container.innerHTML = html;
         }
 
+        // ===== 球员管理渲染（卡片式球队名 + 卡片式球员名） =====
         function renderPlayers() {
             const roster = document.getElementById('teamRoster');
             const count = document.getElementById('playerCount');
             count.textContent = players.length;
+
+            // 更新转会下拉列表
             const sel = document.getElementById('transferPlayerSelect');
             const currentVal = sel.value;
             sel.innerHTML = '<option value="">-- 选择球员 --</option>';
@@ -702,14 +938,30 @@
                 sel.innerHTML += `<option value="${p.id}">${p.name} (${TEAM_SHORT[p.team] || p.team})</option>`;
             });
             sel.value = currentVal;
+
             let html = '';
             TEAMS.forEach(team => {
                 const list = getTeamPlayers(team);
-                html += `<div class="team-group"><h4>${team} (${list.length}人)</h4><div>`;
-                if (list.length === 0) html += '<span style="color:#aaa; font-size:12px;">暂无球员</span>';
-                list.forEach(p => {
-                    html += `<span class="player-chip">${p.name} <span class="del" onclick="removePlayer('${p.id}')">✕</span></span>`;
-                });
+                html += `<div class="team-group">`;
+
+                // 球队名卡片
+                html += `<div class="team-name-card">
+                    <span class="name">${team}</span>
+                    <span class="count">${list.length}</span>
+                </div>`;
+
+                // 球员卡片网格
+                html += `<div class="players-grid">`;
+                if (list.length === 0) {
+                    html += `<span class="no-players">暂无球员</span>`;
+                } else {
+                    list.forEach(p => {
+                        html += `<div class="player-card">
+                            <span class="name">${p.name}</span>
+                            <button class="del-btn" onclick="removePlayer('${p.id}')">✕</button>
+                        </div>`;
+                    });
+                }
                 html += `</div></div>`;
             });
             roster.innerHTML = html;
@@ -746,7 +998,7 @@
             const assistList = Object.keys(assists).map(id => ({ id, count: assists[id] })).sort((a, b) => b.count - a.count);
 
             let scorerHtml = '<div class="rank-list">';
-            if (scorerList.length === 0) scorerHtml += '<div style="color:#aaa;">暂无进球数据</div>';
+            if (scorerList.length === 0) scorerHtml += '<div style="color:#aaa; padding:10px 0;">暂无进球数据</div>';
             scorerList.forEach((item, i) => {
                 scorerHtml += `<div class="rank-item"><span class="pos">${i+1}</span><span class="name">${getPlayerName(item.id)}</span><span class="stat">${item.count}球</span></div>`;
             });
@@ -754,7 +1006,7 @@
             document.getElementById('scorerRank').innerHTML = scorerHtml;
 
             let assistHtml = '<div class="rank-list">';
-            if (assistList.length === 0) assistHtml += '<div style="color:#aaa;">暂无助攻数据</div>';
+            if (assistList.length === 0) assistHtml += '<div style="color:#aaa; padding:10px 0;">暂无助攻数据</div>';
             assistList.forEach((item, i) => {
                 assistHtml += `<div class="rank-item"><span class="pos">${i+1}</span><span class="name">${getPlayerName(item.id)}</span><span class="stat">${item.count}次</span></div>`;
             });
@@ -766,12 +1018,12 @@
             const container = document.getElementById('announcementList');
             let html = '';
             announcements.forEach((text, idx) => {
-                html += `<div style="padding:8px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:13px;">${text}</span>
+                html += `<div style="padding:10px 0; border-bottom:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:14px;">${text}</span>
                     <button class="btn btn-danger btn-sm" onclick="removeAnnounce(${idx})">✕</button>
                 </div>`;
             });
-            if (announcements.length === 0) html = '<div style="color:#aaa; padding:8px 0;">暂无预告，添加一条吧</div>';
+            if (announcements.length === 0) html = '<div style="color:#aaa; padding:10px 0;">暂无预告，添加一条吧</div>';
             container.innerHTML = html;
         }
 
@@ -785,45 +1037,45 @@
                 eventsHtml = m.events.map((e, i) => {
                     const p = getPlayerName(e.playerId);
                     const a = e.assistId ? getPlayerName(e.assistId) : '无';
-                    return `<div style="display:flex; gap:8px; align-items:center; font-size:12px; padding:4px 0; border-bottom:1px solid #f0f0f0;">
+                    return `<div style="display:flex; gap:8px; align-items:center; font-size:13px; padding:6px 0; border-bottom:1px solid #f0f0f0;">
                         <span>${p} ⚽ ${a !== '无' ? ' (助:'+a+')' : ''}</span>
                         <button class="btn btn-danger btn-sm" onclick="removeEvent('${matchId}', ${i})">✕</button>
                     </div>`;
                 }).join('');
             } else {
-                eventsHtml = '<div style="color:#aaa; padding:6px 0;">暂无进球</div>';
+                eventsHtml = '<div style="color:#aaa; padding:8px 0;">暂无进球</div>';
             }
             const overlay = document.createElement('div');
             overlay.id = 'matchEditorOverlay';
-            overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; display:flex; align-items:center; justify-content:center; padding:16px;';
+            overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45); z-index:999; display:flex; align-items:center; justify-content:center; padding:16px;';
             overlay.innerHTML = `
-                <div style="background:white; max-width:440px; width:100%; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
-                    <h3 style="margin-bottom:6px; font-size:17px;">${TEAM_SHORT[m.homeTeam] || m.homeTeam} vs ${TEAM_SHORT[m.awayTeam] || m.awayTeam}</h3>
-                    <p style="color:#888; font-size:13px; margin-bottom:10px;">${m.date} ${m.day} ${m.time} · ${m.venue || VENUE}</p>
-                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
-                        <label style="font-size:13px;">主队 <input type="number" id="editHomeScore" value="${m.homeScore !== null ? m.homeScore : 0}" min="0" style="width:44px; padding:4px;"></label>
-                        <label style="font-size:13px;">客队 <input type="number" id="editAwayScore" value="${m.awayScore !== null ? m.awayScore : 0}" min="0" style="width:44px; padding:4px;"></label>
+                <div style="background:white; max-width:440px; width:100%; border-radius:20px; padding:24px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <h3 style="margin-bottom:6px; font-size:18px; color:var(--primary-dark);">${TEAM_SHORT[m.homeTeam] || m.homeTeam} vs ${TEAM_SHORT[m.awayTeam] || m.awayTeam}</h3>
+                    <p style="color:#888; font-size:14px; margin-bottom:16px;">${m.date} ${m.day} ${m.time} · ${m.venue || VENUE}</p>
+                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+                        <label style="font-size:14px; font-weight:500;">主队 <input type="number" id="editHomeScore" value="${m.homeScore !== null ? m.homeScore : 0}" min="0" style="width:50px; padding:6px; border:2px solid var(--border-light); border-radius:20px; text-align:center;"></label>
+                        <label style="font-size:14px; font-weight:500;">客队 <input type="number" id="editAwayScore" value="${m.awayScore !== null ? m.awayScore : 0}" min="0" style="width:50px; padding:6px; border:2px solid var(--border-light); border-radius:20px; text-align:center;"></label>
                         <button class="btn" onclick="saveScore('${matchId}')">保存比分</button>
                     </div>
-                    <hr>
-                    <div style="margin:10px 0;">
-                        <strong style="font-size:14px;">⚽ 添加进球</strong>
-                        <div class="input-group" style="flex-wrap:wrap;">
-                            <select id="goalPlayerSelect" style="flex:2; min-width:100px; font-size:12px;">
+                    <hr class="divider">
+                    <div style="margin:12px 0;">
+                        <strong style="font-size:15px;">⚽ 添加进球</strong>
+                        <div class="input-group" style="flex-wrap:wrap; margin-top:6px;">
+                            <select id="goalPlayerSelect" style="flex:2; min-width:100px; font-size:13px;">
                                 <option value="">-- 进球球员 --</option>
                                 ${allPlayers.map(p => `<option value="${p.id}">${p.name} (${TEAM_SHORT[p.team] || p.team})</option>`).join('')}
                             </select>
-                            <select id="assistPlayerSelect" style="flex:1; min-width:80px; font-size:12px;">
+                            <select id="assistPlayerSelect" style="flex:1; min-width:80px; font-size:13px;">
                                 <option value="">无助攻</option>
                                 ${allPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                             </select>
                             <button class="btn btn-gold btn-sm" onclick="addGoal('${matchId}')">添加</button>
                         </div>
                     </div>
-                    <div style="background:#f8f9fa; border-radius:10px; padding:8px; max-height:180px; overflow-y:auto;">
+                    <div style="background:#f8fbf7; border-radius:12px; padding:10px; max-height:180px; overflow-y:auto; border:1px solid var(--border-light);">
                         ${eventsHtml}
                     </div>
-                    <div style="margin-top:14px; display:flex; gap:10px; justify-content:flex-end;">
+                    <div style="margin-top:18px; display:flex; gap:12px; justify-content:flex-end;">
                         <button class="btn btn-outline" onclick="closeEditor()">关闭</button>
                     </div>
                 </div>
