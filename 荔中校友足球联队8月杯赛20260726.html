@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>荔中联队 · 8月杯赛</title>
+    <style>
+        /* ===== 全局重置 & 主题 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a5e2a;
+            --primary-light: #2e7d39;
+            --gold: #d4a843;
+            --bg: #f4f6f9;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --text: #222;
+            --text-light: #555;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* 草地背景图片（请将图片命名为 grass.jpg 放在同目录下） */
+            background-image: url('grass.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #eaf7e0; /* 备选浅绿色 */
+            /* 背景半透明叠加，让文字更清晰 */
+            background-blend-mode: overlay;
+            color: var(--text);
+            padding-top: 60px;
+            padding-bottom: 20px;
+            min-height: 100vh;
+        }
+
+        /* 如果背景图片加载失败，显示纯色渐变 */
+        @supports (background-image: url('grass.jpg')) {
+            body {
+                background-image: url('grass.jpg'), linear-gradient(135deg, #d4e9c0, #f0f9ec);
+                background-blend-mode: overlay, normal;
+            }
+        }
+
+        /* ===== 顶部导航栏（固定在顶端） ===== */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px 0;
+            z-index: 200;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            background: none;
+            border: none;
+            padding: 4px 6px;
+            cursor: pointer;
+            transition: color 0.2s;
+            min-width: 44px;
+        }
+
+        .nav-item .icon {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+
+        .nav-item.active {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ===== 页面容器 ===== */
+        .page {
+            display: none;
+            padding: 12px 12px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeUp 0.25s ease;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== 通用卡片（半透明背景） ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(2px);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--gold);
+            color: #222;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            font-size: 13px;
+        }
+        .info-grid .label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .info-grid .value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* ===== 表格 ===== */
+        .table-wrap {
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 420px; /* 增加了列，适当加宽 */
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 6px 4px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 6px 4px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .team-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #eef3ee;
+            color: var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-gold {
+            background: var(--gold);
+            color: #222;
+        }
+        .btn-danger {
+            background: #c0392b;
+            color: white;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 6px 0 4px;
+            align-items: center;
+        }
+        .input-group input,
+        .input-group select {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 13px;
+            flex: 1 1 100px;
+            min-width: 80px;
+            background: white;
+        }
+        .input-group button {
+            flex: 0 0 auto;
+        }
+
+        .match-card {
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: #fafbfc;
+        }
+        .match-card .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .match-card .teams {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .match-card .score {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            background: white;
+            padding: 0 10px;
+            border-radius: 6px;
+            min-width: 44px;
+            text-align: center;
+        }
+        .match-card .meta {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* ===== 球员列表 ===== */
+        .player-chip {
+            display: inline-block;
+            background: #eef3ee;
+            padding: 4px 12px 4px 10px;
+            border-radius: 30px;
+            margin: 3px 4px 3px 0;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid #d0dcd0;
+        }
+        .player-chip .del {
+            margin-left: 6px;
+            cursor: pointer;
+            color: #999;
+            font-weight: 700;
+        }
+        .player-chip .del:hover {
+            color: #c0392b;
+        }
+
+        .team-group {
+            margin-bottom: 14px;
+        }
+        .team-group h4 {
+            color: var(--primary);
+            border-left: 4px solid var(--gold);
+            padding-left: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        /* ===== 排行榜 ===== */
+        .rank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 8px;
+            background: #f8f9fa;
+            border-radius: 30px;
+            font-size: 13px;
+        }
+        .rank-item .pos {
+            font-weight: 700;
+            width: 24px;
+            color: var(--gold);
+        }
+        .rank-item .name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .rank-item .stat {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ===== 底部图片展示区 ===== */
+        .footer-gallery {
+            margin-top: 20px;
+            padding: 12px 0;
+            border-top: 1px solid #ddd;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .footer-gallery .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .gallery-item {
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 6px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #ddd;
+        }
+        .gallery-item .caption {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 8px;
+                font-size: 12px;
+            }
+            .match-card .teams {
+                font-size: 13px;
+            }
+            .match-card .score {
+                font-size: 15px;
+                min-width: 36px;
+            }
+            table {
+                min-width: 360px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部导航栏 ===== -->
+    <nav class="top-nav">
+        <button class="nav-item active" data-page="home"><span class="icon">🏠</span>首页</button>
+        <button class="nav-item" data-page="schedule"><span class="icon">📅</span>赛程</button>
+        <button class="nav-item" data-page="admin"><span class="icon">✍️</span>录入</button>
+        <button class="nav-item" data-page="players"><span class="icon">👥</span>球员</button>
+        <button class="nav-item" data-page="stats"><span class="icon">📊</span>统计</button>
+    </nav>
+
+    <!-- ===== 页面容器 ===== -->
+    <main id="app">
+
+        <!-- 页面1: 首页 -->
+        <section id="page-home" class="page active">
+            <!-- 关键信息 -->
+            <div class="card">
+                <div class="card-title">📋 荔中校友足球联队8月杯赛 - 关键信息</div>
+                <div style="background:#f0f7f0; padding:10px; border-radius:10px; margin-bottom:10px;">
+                    <p style="font-weight:700; color:var(--primary); font-size:14px;">🏆 8月杯赛 · 双循环共6轮</p>
+                </div>
+                <div class="info-grid">
+                    <span class="label">📅 周一</span>
+                    <span class="value">20:30 – 22:30</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第一节</span>
+                    <span class="value" style="grid-column:2;">20:30 (上半场1)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第二节</span>
+                    <span class="value" style="grid-column:2;">21:00 (上半场2)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第三节</span>
+                    <span class="value" style="grid-column:2;">21:30 (下半场1)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第四节</span>
+                    <span class="value" style="grid-column:2;">22:00 (下半场2)</span>
+                </div>
+                <hr style="margin:10px 0; border:1px dashed #ddd;">
+                <div class="info-grid">
+                    <span class="label">📅 周五</span>
+                    <span class="value">18:30 – 20:30</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第一节</span>
+                    <span class="value" style="grid-column:2;">18:30 (上半场1)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第二节</span>
+                    <span class="value" style="grid-column:2;">19:00 (上半场2)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第三节</span>
+                    <span class="value" style="grid-column:2;">19:30 (下半场1)</span>
+                    <span class="label" style="grid-column:1;">⏱️ 第四节</span>
+                    <span class="value" style="grid-column:2;">20:00 (下半场2)</span>
+                </div>
+            </div>
+
+            <!-- 赛事预告 -->
+            <div class="card">
+                <div class="card-title">📢 赛事预告 <span class="badge">最新</span></div>
+                <div id="announcementList">
+                    <div style="padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                        <strong>⚡ 8月3日（周一）揭幕战</strong>
+                        <p style="color:var(--text-light); font-size:13px; margin-top:2px;">鱼腩队 vs 先锋队 · 20:30</p>
+                    </div>
+                    <div style="padding:8px 0;">
+                        <strong>🏅 8月20日（周五）颁奖之夜</strong>
+                        <p style="color:var(--text-light); font-size:13px; margin-top:2px;">最后一轮结束举行冠军 & 最佳射手颁奖</p>
+                    </div>
+                </div>
+                <div style="margin-top:8px;">
+                    <input type="text" id="announceInput" placeholder="添加新预告..." style="padding:6px 10px; border:1px solid #ccc; border-radius:20px; width:70%; font-size:13px;">
+                    <button class="btn btn-sm" onclick="addAnnounce()">发布</button>
+                </div>
+            </div>
+
+            <!-- 底部图片展示（带中文名字，加载失败自动隐藏） -->
+            <div class="footer-gallery">
+                <div class="title">📸 荔中联队 · 精彩瞬间</div>
+                <div class="gallery-grid">
+                    <div class="gallery-item" id="img1">
+                        <img src="01.jpg" alt="荔中联队队徽" onerror="document.getElementById('img1').style.display='none'">
+                        <div class="caption">荔中联队队徽</div>
+                    </div>
+                    <div class="gallery-item" id="img2">
+                        <img src="微信图片_20260726002415_501_171.jpg" alt="2026新春赛" onerror="document.getElementById('img2').style.display='none'">
+                        <div class="caption">2026新春赛</div>
+                    </div>
+                    <div class="gallery-item" id="img3">
+                        <img src="微信图片_20260726002643_504_171.jpg" alt="荔中联队" onerror="document.getElementById('img3').style.display='none'">
+                        <div class="caption">荔中联队</div>
+                    </div>
+                    <div class="gallery-item" id="img4">
+                        <img src="20251004母校绿茵聚首2.jpg" alt="母校绿茵聚首" onerror="document.getElementById('img4').style.display='none'">
+                        <div class="caption">母校绿茵聚首</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页面2: 赛程 -->
+        <section id="page-schedule" class="page">
+            <div class="card">
+                <div class="card-title">📅 详细赛程表</div>
+                <div id="scheduleList"></div>
+            </div>
+        </section>
+
+        <!-- 页面3: 数据录入 -->
+        <section id="page-admin" class="page">
+            <div class="card">
+                <div class="card-title">✍️ 数据录入台</div>
+                <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">点击场次卡片录入比分、进球及助攻（无需时间）</p>
+                <div id="adminMatchList"></div>
+            </div>
+        </section>
+
+        <!-- 页面4: 球员管理 -->
+        <section id="page-players" class="page">
+            <div class="card">
+                <div class="card-title">👥 球员管理 <span class="badge" id="playerCount">0</span></div>
+                <div class="input-group">
+                    <input type="text" id="playerNameInput" placeholder="姓名">
+                    <select id="playerTeamSelect">
+                        <option value="鱼腩队">鱼腩队</option>
+                        <option value="先锋队">先锋队</option>
+                        <option value="快乐队">快乐队</option>
+                        <option value="战魂队">战魂队</option>
+                    </select>
+                    <button class="btn" onclick="addPlayer()">➕ 添加</button>
+                </div>
+                <div style="margin-top:10px;">
+                    <label style="font-weight:600; font-size:13px;">🔄 转会 (转入/转出)</label>
+                    <div class="input-group">
+                        <select id="transferPlayerSelect" style="flex:2;"><option value="">-- 选择球员 --</option></select>
+                        <select id="transferTeamSelect">
+                            <option value="鱼腩队">➡️ 鱼腩队</option>
+                            <option value="先锋队">➡️ 先锋队</option>
+                            <option value="快乐队">➡️ 快乐队</option>
+                            <option value="战魂队">➡️ 战魂队</option>
+                        </select>
+                        <button class="btn btn-gold" onclick="transferPlayer()">确认转会</button>
+                    </div>
+                </div>
+                <hr style="margin:12px 0;">
+                <div id="teamRoster"></div>
+            </div>
+        </section>
+
+        <!-- 页面5: 统计 -->
+        <section id="page-stats" class="page">
+            <div class="card">
+                <div class="card-title">🏆 积分榜</div>
+                <div id="standingsTable"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">⚽ 射手榜</div>
+                <div id="scorerRank"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎯 助攻榜</div>
+                <div id="assistRank"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- ===== JavaScript 核心逻辑 ===== -->
+    <script>
+        // ---------- 常量 ----------
+        const TEAMS = ['鱼腩队', '先锋队', '快乐队', '战魂队'];
+        const TEAM_SHORT = { '鱼腩队': '鱼腩', '先锋队': '先锋', '快乐队': '快乐', '战魂队': '战魂' };
+        const DATA_VERSION = 'v2'; // 版本号，用于数据重置
+        const VENUE = '夏街'; // 球场固定名称
+
+        // ---------- 存储工具 ----------
+        function loadData(key, def) {
+            try { const d = localStorage.getItem('lc_' + key); return d ? JSON.parse(d) : def; } catch (e) { return def; }
+        }
+
+        function saveData(key, data) {
+            localStorage.setItem('lc_' + key, JSON.stringify(data));
+        }
+
+        // ---------- 数据模型 ----------
+        let players = loadData('players', []);
+        let matches = loadData('matches', []);
+        let announcements = loadData('announcements', ['⚡ 8月3日（周一）揭幕战：鱼腩队 vs 先锋队', '🏅 8月20日（周五）颁奖之夜']);
+
+        // ---------- 初始化赛程 (双循环6轮12场) ----------
+        function initSchedule() {
+            // 检查版本或数据有效性
+            const storedVersion = localStorage.getItem('lc_version');
+            let needReset = false;
+            if (storedVersion !== DATA_VERSION) {
+                needReset = true;
+            } else if (matches.length > 0) {
+                // 检查队名是否匹配
+                const firstMatch = matches[0];
+                if (firstMatch && (!TEAMS.includes(firstMatch.homeTeam) || !TEAMS.includes(firstMatch.awayTeam))) {
+                    needReset = true;
+                }
+            }
+
+            if (needReset) {
+                // 重置赛程数据
+                const rounds = [
+                    { date: '8月3日', day: '周一', time: '20:30', home: 0, away: 1 },
+                    { date: '8月3日', day: '周一', time: '21:00', home: 2, away: 3 },
+                    { date: '8月6日', day: '周五', time: '18:30', home: 0, away: 2 },
+                    { date: '8月6日', day: '周五', time: '19:00', home: 1, away: 3 },
+                    { date: '8月10日', day: '周一', time: '20:30', home: 0, away: 3 },
+                    { date: '8月10日', day: '周一', time: '21:00', home: 1, away: 2 },
+                    { date: '8月13日', day: '周五', time: '18:30', home: 0, away: 1 },
+                    { date: '8月13日', day: '周五', time: '19:00', home: 2, away: 3 },
+                    { date: '8月17日', day: '周一', time: '20:30', home: 0, away: 2 },
+                    { date: '8月17日', day: '周一', time: '21:00', home: 1, away: 3 },
+                    { date: '8月20日', day: '周五', time: '18:30', home: 0, away: 3 },
+                    { date: '8月20日', day: '周五', time: '19:00', home: 1, away: 2 }
+                ];
+
+                matches = rounds.map((r, idx) => ({
+                    id: 'm' + (idx + 1),
+                    round: Math.floor(idx / 2) + 1,
+                    date: r.date,
+                    day: r.day,
+                    time: r.time,
+                    homeTeam: TEAMS[r.home],
+                    awayTeam: TEAMS[r.away],
+                    homeScore: null,
+                    awayScore: null,
+                    events: [],
+                    venue: VENUE // 增加球场字段
+                }));
+                saveData('matches', matches);
+                localStorage.setItem('lc_version', DATA_VERSION);
+            }
+        }
+        initSchedule();
+
+        // ---------- 辅助函数 ----------
+        function getPlayerName(id) {
+            const p = players.find(x => x.id === id);
+            return p ? p.name : '未知';
+        }
+
+        function getTeamPlayers(team) {
+            return players.filter(p => p.team === team);
+        }
+
+        function getTeamStats(team) {
+            let played = 0,
+                wins = 0,
+                draws = 0,
+                losses = 0,
+                gf = 0,
+                ga = 0;
+            matches.forEach(m => {
+                if (m.homeScore === null || m.awayScore === null) return;
+                if (m.homeTeam === team) {
+                    played++;
+                    gf += m.homeScore;
+                    ga += m.awayScore;
+                    if (m.homeScore > m.awayScore) wins++;
+                    else if (m.homeScore === m.awayScore) draws++;
+                    else losses++;
+                } else if (m.awayTeam === team) {
+                    played++;
+                    gf += m.awayScore;
+                    ga += m.homeScore;
+                    if (m.awayScore > m.homeScore) wins++;
+                    else if (m.awayScore === m.homeScore) draws++;
+                    else losses++;
+                }
+            });
+            const pts = wins * 3 + draws * 1;
+            return { played, wins, draws, losses, gf, ga, gd: gf - ga, pts };
+        }
+
+        function getGoalStats() {
+            const goals = {};
+            const assists = {};
+            matches.forEach(m => {
+                if (!m.events) return;
+                m.events.forEach(e => {
+                    if (e.type === 'goal') {
+                        goals[e.playerId] = (goals[e.playerId] || 0) + 1;
+                        if (e.assistId) {
+                            assists[e.assistId] = (assists[e.assistId] || 0) + 1;
+                        }
+                    }
+                });
+            });
+            return { goals, assists };
+        }
+
+        // ---------- 渲染: 赛程表（增加星期和球场） ----------
+        function renderSchedule() {
+            const container = document.getElementById('scheduleList');
+            let html = `<div class="table-wrap"><table>
+                <thead><tr><th>轮次</th><th>日期</th><th>星期</th><th>时间</th><th>主队</th><th>比分</th><th>客队</th><th>球场</th></tr></thead><tbody>`;
+            matches.forEach(m => {
+                const sc = (m.homeScore !== null && m.awayScore !== null) ? `${m.homeScore} - ${m.awayScore}` : 'vs';
+                html += `<tr>
+                    <td>第${m.round}轮</td>
+                    <td>${m.date}</td>
+                    <td>${m.day}</td>
+                    <td>${m.time}</td>
+                    <td>${TEAM_SHORT[m.homeTeam] || m.homeTeam}</td>
+                    <td><strong>${sc}</strong></td>
+                    <td>${TEAM_SHORT[m.awayTeam] || m.awayTeam}</td>
+                    <td>${m.venue || VENUE}</td>
+                </tr>`;
+            });
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        // ---------- 渲染: 数据录入 (可点击编辑) ----------
+        function renderAdmin() {
+            const container = document.getElementById('adminMatchList');
+            let html = '';
+            matches.forEach((m, idx) => {
+                const sc = (m.homeScore !== null && m.awayScore !== null) ? `${m.homeScore} - ${m.awayScore}` : '未录入';
+                const eventsHtml = (m.events && m.events.length > 0) ?
+                    m.events.map(e => {
+                        const pName = getPlayerName(e.playerId);
+                        const aName = e.assistId ? ` (助:${getPlayerName(e.assistId)})` : '';
+                        return `${pName}⚽${aName}`;
+                    }).join('; ') :
+                    '暂无进球记录';
+
+                const homeDisplay = TEAM_SHORT[m.homeTeam] || m.homeTeam;
+                const awayDisplay = TEAM_SHORT[m.awayTeam] || m.awayTeam;
+
+                html += `<div class="match-card" onclick="openMatchEditor('${m.id}')" style="cursor:pointer;">
+                    <div class="row">
+                        <span class="teams">${homeDisplay} vs ${awayDisplay}</span>
+                        <span class="score">${sc}</span>
+                    </div>
+                    <div class="row meta">
+                        <span>第${m.round}轮 · ${m.date} ${m.day} ${m.time}</span>
+                        <span style="font-size:11px; color:#888;">⚽ ${eventsHtml}</span>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ---------- 编辑器 (弹窗式) ----------
+        function openMatchEditor(matchId) {
+            const m = matches.find(x => x.id === matchId);
+            if (!m) return;
+            const homeTeamPlayers = getTeamPlayers(m.homeTeam);
+            const awayTeamPlayers = getTeamPlayers(m.awayTeam);
+            const allPlayers = [...homeTeamPlayers, ...awayTeamPlayers];
+
+            let eventsHtml = '';
+            if (m.events && m.events.length > 0) {
+                eventsHtml = m.events.map((e, i) => {
+                    const p = getPlayerName(e.playerId);
+                    const a = e.assistId ? getPlayerName(e.assistId) : '无';
+                    return `<div style="display:flex; gap:8px; align-items:center; font-size:12px; padding:4px 0; border-bottom:1px solid #f0f0f0;">
+                        <span>${p} ⚽ ${a !== '无' ? ' (助:'+a+')' : ''}</span>
+                        <button class="btn btn-danger btn-sm" onclick="removeEvent('${matchId}', ${i})">✕</button>
+                    </div>`;
+                }).join('');
+            } else {
+                eventsHtml = '<div style="color:#aaa; padding:6px 0;">暂无进球</div>';
+            }
+
+            const overlay = document.createElement('div');
+            overlay.id = 'matchEditorOverlay';
+            overlay.style.cssText =
+                'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; display:flex; align-items:center; justify-content:center; padding:16px;';
+            overlay.innerHTML = `
+                <div style="background:white; max-width:440px; width:100%; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
+                    <h3 style="margin-bottom:6px; font-size:17px;">${TEAM_SHORT[m.homeTeam] || m.homeTeam} vs ${TEAM_SHORT[m.awayTeam] || m.awayTeam}</h3>
+                    <p style="color:#888; font-size:13px; margin-bottom:10px;">${m.date} ${m.day} ${m.time} · ${m.venue || VENUE}</p>
+                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+                        <label style="font-size:13px;">主队 <input type="number" id="editHomeScore" value="${m.homeScore !== null ? m.homeScore : 0}" min="0" style="width:44px; padding:4px;"></label>
+                        <label style="font-size:13px;">客队 <input type="number" id="editAwayScore" value="${m.awayScore !== null ? m.awayScore : 0}" min="0" style="width:44px; padding:4px;"></label>
+                        <button class="btn" onclick="saveScore('${matchId}')">保存比分</button>
+                    </div>
+                    <hr>
+                    <div style="margin:10px 0;">
+                        <strong style="font-size:14px;">⚽ 添加进球</strong>
+                        <div class="input-group" style="flex-wrap:wrap;">
+                            <select id="goalPlayerSelect" style="flex:2; min-width:100px; font-size:12px;">
+                                <option value="">-- 进球球员 --</option>
+                                ${allPlayers.map(p => `<option value="${p.id}">${p.name} (${TEAM_SHORT[p.team] || p.team})</option>`).join('')}
+                            </select>
+                            <select id="assistPlayerSelect" style="flex:1; min-width:80px; font-size:12px;">
+                                <option value="">无助攻</option>
+                                ${allPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                            </select>
+                            <button class="btn btn-gold btn-sm" onclick="addGoal('${matchId}')">添加</button>
+                        </div>
+                    </div>
+                    <div style="background:#f8f9fa; border-radius:10px; padding:8px; max-height:180px; overflow-y:auto;">
+                        ${eventsHtml}
+                    </div>
+                    <div style="margin-top:14px; display:flex; gap:10px; justify-content:flex-end;">
+                        <button class="btn btn-outline" onclick="closeEditor()">关闭</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function closeEditor() {
+            const el = document.getElementById('matchEditorOverlay');
+            if (el) el.remove();
+            renderAll();
+        }
+
+        // ---------- 数据操作函数 ----------
+        function saveScore(matchId) {
+            const m = matches.find(x => x.id === matchId);
+            if (!m) return;
+            const home = parseInt(document.getElementById('editHomeScore').value) || 0;
+            const away = parseInt(document.getElementById('editAwayScore').value) || 0;
+            m.homeScore = home;
+            m.awayScore = away;
+            saveData('matches', matches);
+            closeEditor();
+            renderAll();
+        }
+
+        function addGoal(matchId) {
+            const m = matches.find(x => x.id === matchId);
+            if (!m) return;
+            const playerId = document.getElementById('goalPlayerSelect').value;
+            const assistId = document.getElementById('assistPlayerSelect').value || null;
+            if (!playerId) { alert('请选择进球球员'); return; }
+            if (!m.events) m.events = [];
+            m.events.push({ type: 'goal', playerId, assistId });
+            saveData('matches', matches);
+            closeEditor();
+            renderAll();
+        }
+
+        function removeEvent(matchId, index) {
+            const m = matches.find(x => x.id === matchId);
+            if (!m) return;
+            m.events.splice(index, 1);
+            saveData('matches', matches);
+            closeEditor();
+            renderAll();
+        }
+
+        // ---------- 球员管理 ----------
+        function renderPlayers() {
+            const roster = document.getElementById('teamRoster');
+            const count = document.getElementById('playerCount');
+            count.textContent = players.length;
+
+            // 更新转会下拉
+            const sel = document.getElementById('transferPlayerSelect');
+            const currentVal = sel.value;
+            sel.innerHTML = '<option value="">-- 选择球员 --</option>';
+            players.forEach(p => {
+                sel.innerHTML += `<option value="${p.id}">${p.name} (${TEAM_SHORT[p.team] || p.team})</option>`;
+            });
+            sel.value = currentVal;
+
+            let html = '';
+            TEAMS.forEach(team => {
+                const list = getTeamPlayers(team);
+                html += `<div class="team-group"><h4>${team} (${list.length}人)</h4><div>`;
+                if (list.length === 0) html += '<span style="color:#aaa; font-size:12px;">暂无球员</span>';
+                list.forEach(p => {
+                    html += `<span class="player-chip">${p.name} <span class="del" onclick="removePlayer('${p.id}')">✕</span></span>`;
+                });
+                html += `</div></div>`;
+            });
+            roster.innerHTML = html;
+        }
+
+        function addPlayer() {
+            const name = document.getElementById('playerNameInput').value.trim();
+            const team = document.getElementById('playerTeamSelect').value;
+            if (!name) { alert('请输入姓名'); return; }
+            if (players.find(p => p.name === name && p.team === team)) { alert('该球员已在此队'); return; }
+            players.push({ id: 'p' + Date.now(), name, team });
+            saveData('players', players);
+            document.getElementById('playerNameInput').value = '';
+            renderAll();
+        }
+
+        function removePlayer(id) {
+            if (!confirm('确认移除该球员？')) return;
+            players = players.filter(p => p.id !== id);
+            saveData('players', players);
+            renderAll();
+        }
+
+        function transferPlayer() {
+            const pid = document.getElementById('transferPlayerSelect').value;
+            const newTeam = document.getElementById('transferTeamSelect').value;
+            if (!pid) { alert('请选择球员'); return; }
+            const p = players.find(x => x.id === pid);
+            if (!p) return;
+            if (p.team === newTeam) { alert('该球员已在此队'); return; }
+            p.team = newTeam;
+            saveData('players', players);
+            renderAll();
+        }
+
+        // ---------- 渲染: 统计 (积分榜+射手+助攻) ----------
+        function renderStats() {
+            // 积分榜
+            let standings = TEAMS.map(team => {
+                const s = getTeamStats(team);
+                return { team, ...s };
+            });
+            standings.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+
+            let html = `<div class="table-wrap"><table>
+                <thead><tr><th>排名</th><th>球队</th><th>场次</th><th>胜</th><th>平</th><th>负</th><th>进/失</th><th>净胜</th><th>积分</th></tr></thead><tbody>`;
+            standings.forEach((s, i) => {
+                html += `<tr>
+                    <td><strong>${i+1}</strong></td>
+                    <td>${TEAM_SHORT[s.team] || s.team}</td>
+                    <td>${s.played}</td>
+                    <td>${s.wins}</td>
+                    <td>${s.draws}</td>
+                    <td>${s.losses}</td>
+                    <td>${s.gf}/${s.ga}</td>
+                    <td>${s.gd}</td>
+                    <td><strong>${s.pts}</strong></td>
+                </tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('standingsTable').innerHTML = html;
+
+            // 射手榜 & 助攻榜
+            const { goals, assists } = getGoalStats();
+            const scorerList = Object.keys(goals).map(id => ({ id, count: goals[id] })).sort((a, b) => b.count - a.count);
+            const assistList = Object.keys(assists).map(id => ({ id, count: assists[id] })).sort((a, b) => b.count - a.count);
+
+            let scorerHtml = '<div class="rank-list">';
+            if (scorerList.length === 0) scorerHtml += '<div style="color:#aaa;">暂无进球数据</div>';
+            scorerList.forEach((item, i) => {
+                scorerHtml +=
+                    `<div class="rank-item"><span class="pos">${i+1}</span><span class="name">${getPlayerName(item.id)}</span><span class="stat">${item.count}球</span></div>`;
+            });
+            scorerHtml += '</div>';
+            document.getElementById('scorerRank').innerHTML = scorerHtml;
+
+            let assistHtml = '<div class="rank-list">';
+            if (assistList.length === 0) assistHtml += '<div style="color:#aaa;">暂无助攻数据</div>';
+            assistList.forEach((item, i) => {
+                assistHtml +=
+                    `<div class="rank-item"><span class="pos">${i+1}</span><span class="name">${getPlayerName(item.id)}</span><span class="stat">${item.count}次</span></div>`;
+            });
+            assistHtml += '</div>';
+            document.getElementById('assistRank').innerHTML = assistHtml;
+        }
+
+        // ---------- 公告 ----------
+        function renderAnnouncements() {
+            const container = document.getElementById('announcementList');
+            let html = '';
+            announcements.forEach((text, idx) => {
+                html += `<div style="padding:8px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:13px;">${text}</span>
+                    <button class="btn btn-danger btn-sm" onclick="removeAnnounce(${idx})">✕</button>
+                </div>`;
+            });
+            if (announcements.length === 0) html = '<div style="color:#aaa; padding:8px 0;">暂无预告，添加一条吧</div>';
+            container.innerHTML = html;
+        }
+
+        function addAnnounce() {
+            const input = document.getElementById('announceInput');
+            if (!input.value.trim()) return;
+            announcements.push(input.value.trim());
+            saveData('announcements', announcements);
+            input.value = '';
+            renderAnnouncements();
+        }
+
+        function removeAnnounce(idx) {
+            announcements.splice(idx, 1);
+            saveData('announcements', announcements);
+            renderAnnouncements();
+        }
+
+        // ---------- 导航切换 ----------
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+            // 渲染对应内容
+            if (page === 'home') renderAnnouncements();
+            if (page === 'schedule') renderSchedule();
+            if (page === 'admin') renderAdmin();
+            if (page === 'players') renderPlayers();
+            if (page === 'stats') renderStats();
+        }
+
+        // ---------- 全量渲染 ----------
+        function renderAll() {
+            const active = document.querySelector('.page.active');
+            if (active) {
+                const id = active.id.replace('page-', '');
+                navigate(id);
+            } else {
+                navigate('home');
+            }
+        }
+
+        // ---------- 事件绑定 ----------
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                navigate(this.dataset.page);
+            });
+        });
+
+        // 初始化
+        window.onload = function() {
+            navigate('home');
+        };
+
+        // 暴露全局
+        window.addPlayer = addPlayer;
+        window.removePlayer = removePlayer;
+        window.transferPlayer = transferPlayer;
+        window.openMatchEditor = openMatchEditor;
+        window.closeEditor = closeEditor;
+        window.saveScore = saveScore;
+        window.addGoal = addGoal;
+        window.removeEvent = removeEvent;
+        window.addAnnounce = addAnnounce;
+        window.removeAnnounce = removeAnnounce;
+        window.renderAll = renderAll;
+        window.navigate = navigate;
+    </script>
+
+</body>
+</html>
