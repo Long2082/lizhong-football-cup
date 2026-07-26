@@ -312,7 +312,7 @@
         .rank-item .name { flex: 1; font-weight: 500; }
         .rank-item .stat { font-weight: 700; color: var(--primary); }
 
-        /* ===== 底部图片 ===== */
+        /* ===== 底部图片（三张一行） ===== */
         .footer-gallery {
             margin-top: 20px;
             padding: 12px 0;
@@ -328,7 +328,6 @@
             text-align: center;
             margin-bottom: 10px;
         }
-        /* 三张图片一行 */
         .gallery-grid {
             display: flex;
             gap: 10px;
@@ -337,7 +336,7 @@
         }
         .gallery-item {
             flex: 1;
-            min-width: 0; /* 防止溢出 */
+            min-width: 0;
             text-align: center;
             background: #f8f9fa;
             border-radius: 8px;
@@ -355,7 +354,7 @@
             font-size: 12px;
             color: var(--text-light);
             margin-top: 4px;
-            white-space: nowrap;  /* 文字不换行 */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -369,7 +368,6 @@
             .match-card .teams { font-size: 13px; }
             .match-card .score { font-size: 15px; min-width: 36px; }
             table { min-width: 360px; }
-            /* 手机端三张图片依然在一行，但可以适当缩小间距 */
             .gallery-grid { gap: 6px; }
             .gallery-item { padding: 4px; }
             .gallery-item .caption { font-size: 10px; }
@@ -535,7 +533,7 @@
         // ---------- 常量 ----------
         const TEAMS = ['鱼腩队', '先锋队', '快乐队', '战魂队'];
         const TEAM_SHORT = { '鱼腩队': '鱼腩', '先锋队': '先锋', '快乐队': '快乐', '战魂队': '战魂' };
-        const DATA_VERSION = 'v2';
+        const DATA_VERSION = 'v3';   // 升级版本，强制重置赛程（日期修正）
         const VENUE = '夏街';
 
         // ---------- 存储工具 ----------
@@ -549,34 +547,39 @@
         // ---------- 数据模型 ----------
         let players = loadData('players', []);
         let matches = loadData('matches', []);
-        let announcements = loadData('announcements', ['⚡ 8月3日（周一）揭幕战：鱼腩队 vs 先锋队', '🏅 8月20日（周五）颁奖之夜']);
+        let announcements = loadData('announcements', ['⚡ 8月3日（周一）揭幕战：鱼腩队 vs 先锋队', '🏅 8月21日（周五）颁奖之夜']);
 
-        // ---------- 初始化赛程 ----------
+        // ---------- 初始化赛程（修正日期） ----------
         function initSchedule() {
             const storedVersion = localStorage.getItem('lc_version');
             let needReset = false;
-            if (storedVersion !== DATA_VERSION) needReset = true;
-            else if (matches.length > 0) {
-                const firstMatch = matches[0];
-                if (firstMatch && (!TEAMS.includes(firstMatch.homeTeam) || !TEAMS.includes(firstMatch.awayTeam))) {
+            if (storedVersion !== DATA_VERSION) {
+                needReset = true;
+            } else if (matches.length > 0) {
+                // 检查第一场比赛的日期是否正确（8月3日周一，第三场应该是8月7日周五）
+                const first = matches[0];
+                if (first && first.date !== '8月3日') {
                     needReset = true;
                 }
             }
+
             if (needReset) {
+                // 根据2026年8月正确日期定义
                 const rounds = [
                     { date: '8月3日', day: '周一', time: '20:30', home: 0, away: 1 },
                     { date: '8月3日', day: '周一', time: '21:00', home: 2, away: 3 },
-                    { date: '8月6日', day: '周五', time: '18:30', home: 0, away: 2 },
-                    { date: '8月6日', day: '周五', time: '19:00', home: 1, away: 3 },
+                    { date: '8月7日', day: '周五', time: '18:30', home: 0, away: 2 },
+                    { date: '8月7日', day: '周五', time: '19:00', home: 1, away: 3 },
                     { date: '8月10日', day: '周一', time: '20:30', home: 0, away: 3 },
                     { date: '8月10日', day: '周一', time: '21:00', home: 1, away: 2 },
-                    { date: '8月13日', day: '周五', time: '18:30', home: 0, away: 1 },
-                    { date: '8月13日', day: '周五', time: '19:00', home: 2, away: 3 },
+                    { date: '8月14日', day: '周五', time: '18:30', home: 0, away: 1 },
+                    { date: '8月14日', day: '周五', time: '19:00', home: 2, away: 3 },
                     { date: '8月17日', day: '周一', time: '20:30', home: 0, away: 2 },
                     { date: '8月17日', day: '周一', time: '21:00', home: 1, away: 3 },
-                    { date: '8月20日', day: '周五', time: '18:30', home: 0, away: 3 },
-                    { date: '8月20日', day: '周五', time: '19:00', home: 1, away: 2 }
+                    { date: '8月21日', day: '周五', time: '18:30', home: 0, away: 3 },
+                    { date: '8月21日', day: '周五', time: '19:00', home: 1, away: 2 }
                 ];
+
                 matches = rounds.map((r, idx) => ({
                     id: 'm' + (idx + 1),
                     round: Math.floor(idx / 2) + 1,
