@@ -381,7 +381,7 @@
             width: 100%;
         }
 
-        /* ===== 球员管理 – 卡片式设计（强制每行4列） ===== */
+        /* ===== 球员管理 – 卡片式设计 ===== */
         .team-group {
             margin-bottom: 18px;
             background: rgba(248, 251, 247, 0.7);
@@ -427,16 +427,16 @@
             letter-spacing: 0.3px;
         }
 
-        /* ---- 球员卡片容器（Flex 布局强制4列） ---- */
+        /* ---- 球员卡片容器（Flex） ---- */
         .players-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
 
-        /* 球员卡片 – 固定宽度25%，确保每行4个 */
+        /* 球员卡片 – 默认（桌面） */
         .player-card {
-            flex: 0 0 calc(25% - 10px);   /* 减去gap宽度 */
+            flex: 0 0 calc(25% - 10px);
             max-width: calc(25% - 10px);
             display: flex;
             align-items: center;
@@ -465,6 +465,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             flex: 1;
+            min-width: 0;
         }
         .player-card .del-btn {
             background: none;
@@ -590,7 +591,7 @@
             font-weight: 500;
         }
 
-        /* ===== 移动端微调（依然保持4列） ===== */
+        /* ===== 移动端适配（保持4列，优化显示3字名字） ===== */
         @media (max-width: 480px) {
             .info-grid {
                 grid-template-columns: 1fr 1fr;
@@ -606,27 +607,32 @@
             .btn { font-size: 13px; padding: 6px 14px; }
             .card { padding: 14px 12px; }
 
-            /* 手机端依然保持4列，仅缩小尺寸 */
+            /* 手机端：4列，但缩小内边距和字体，保证3个字可见 */
             .players-grid {
                 gap: 6px;
             }
             .player-card {
                 flex: 0 0 calc(25% - 6px);
                 max-width: calc(25% - 6px);
-                height: 36px;
-                padding: 0 8px 0 10px;
+                height: 34px;                /* 稍矮 */
+                padding: 0 4px 0 6px;         /* 减小左右内边距，腾出空间 */
+                border-radius: 10px;
             }
             .player-card .name {
                 font-size: 12px;
+                margin-right: 4px;
+                min-width: 36px;              /* 保证至少3个汉字（每个约12px） */
+                flex-shrink: 0;               /* 不允许压缩名字区域 */
             }
             .player-card .del-btn {
-                font-size: 15px;
+                font-size: 12px;              /* 删除按钮缩小 */
+                padding: 0 2px;
             }
             .team-name-card .name { font-size: 15px; }
             .team-name-card .count { font-size: 12px; padding: 0 12px; }
         }
 
-        /* 极窄屏幕（<380px）依然保持4列 */
+        /* 极窄屏（<380px）进一步优化 */
         @media (max-width: 380px) {
             .players-grid {
                 gap: 4px;
@@ -634,16 +640,17 @@
             .player-card {
                 flex: 0 0 calc(25% - 4px);
                 max-width: calc(25% - 4px);
-                height: 32px;
-                padding: 0 4px 0 6px;
+                height: 30px;
+                padding: 0 3px 0 4px;
                 border-radius: 8px;
             }
             .player-card .name {
                 font-size: 10px;
-                margin-right: 4px;
+                min-width: 30px;
+                margin-right: 2px;
             }
             .player-card .del-btn {
-                font-size: 12px;
+                font-size: 10px;
             }
         }
     </style>
