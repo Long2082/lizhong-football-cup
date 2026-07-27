@@ -427,32 +427,27 @@
             letter-spacing: 0.3px;
         }
 
-        /* ---- 球员卡片网格 ---- */
+        /* ---- 球员卡片网格（强制4列） ---- */
         .players-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
 
-        /* ===== 关键修改：球员卡片宽度 ===== */
+        /* 球员卡片 – 固定高度，内容居中，文字溢出省略 */
         .player-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: white;
             border-radius: 12px;
-            padding: 8px 12px 8px 16px;
+            padding: 0 12px 0 16px;
             border: 1.5px solid #dde8dd;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             transition: all 0.2s;
-            /* 每行4个：宽度为25%减去gap */
-            flex: 0 0 calc(25% - 10px);
-            min-width: 0; /* 防止溢出 */
-            max-width: 100%;
-            /* 文字溢出处理 */
+            height: 42px;              /* 固定高度，保证对齐 */
+            min-width: 0;              /* 防止溢出 */
             overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
         }
         .player-card:hover {
             border-color: var(--gold);
@@ -593,7 +588,7 @@
             font-weight: 500;
         }
 
-        /* ===== 移动端微调 ===== */
+        /* ===== 移动端微调（保持4列） ===== */
         @media (max-width: 480px) {
             .info-grid {
                 grid-template-columns: 1fr 1fr;
@@ -609,15 +604,42 @@
             .btn { font-size: 13px; padding: 6px 14px; }
             .card { padding: 14px 12px; }
 
-            /* 手机端：每行2个球员卡片 */
+            /* 手机端保持4列，但缩小间距和字体 */
+            .players-grid {
+                gap: 6px;
+            }
             .player-card {
-                flex: 0 0 calc(50% - 8px);
+                height: 36px;
+                padding: 0 8px 0 10px;
+            }
+            .player-card .name {
+                font-size: 12px;
+            }
+            .player-card .del-btn {
+                font-size: 15px;
             }
             .team-name-card .name { font-size: 15px; }
             .team-name-card .count { font-size: 12px; padding: 0 12px; }
         }
 
-        /* 平板/桌面端保持每行4个，无需额外覆盖 */
+        /* 对于特别小的屏（如320px），仍保持4列，但文字更小 */
+        @media (max-width: 380px) {
+            .players-grid {
+                gap: 4px;
+            }
+            .player-card {
+                height: 32px;
+                padding: 0 4px 0 6px;
+                border-radius: 8px;
+            }
+            .player-card .name {
+                font-size: 10px;
+                margin-right: 4px;
+            }
+            .player-card .del-btn {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -714,7 +736,7 @@
             </div>
         </section>
 
-        <!-- 球员管理（卡片式球队名+球员名，每行4个） -->
+        <!-- 球员管理 -->
         <section id="page-players" class="page">
             <div class="card">
                 <div class="card-title">👥 球员管理 <span class="badge" id="playerCount">0</span></div>
@@ -772,7 +794,7 @@
     </main>
 
     <!-- ========================================== -->
-    <!-- ===== JavaScript 核心逻辑 ===== -->
+    <!-- ===== JavaScript 核心逻辑（不变） ===== -->
     <script>
         // ---------- 常量 ----------
         const TEAMS = ['鱼腩队', '先锋队', '快乐队', '战魂队'];
@@ -928,13 +950,11 @@
             container.innerHTML = html;
         }
 
-        // ===== 球员管理渲染（卡片式球队名 + 球员卡片） =====
         function renderPlayers() {
             const roster = document.getElementById('teamRoster');
             const count = document.getElementById('playerCount');
             count.textContent = players.length;
 
-            // 更新转会下拉列表
             const sel = document.getElementById('transferPlayerSelect');
             const currentVal = sel.value;
             sel.innerHTML = '<option value="">-- 选择球员 --</option>';
@@ -947,14 +967,10 @@
             TEAMS.forEach(team => {
                 const list = getTeamPlayers(team);
                 html += `<div class="team-group">`;
-
-                // 球队名卡片
                 html += `<div class="team-name-card">
                     <span class="name">${team}</span>
                     <span class="count">${list.length}</span>
                 </div>`;
-
-                // 球员卡片网格
                 html += `<div class="players-grid">`;
                 if (list.length === 0) {
                     html += `<span class="no-players">暂无球员</span>`;
@@ -972,7 +988,6 @@
         }
 
         function renderStats() {
-            // 积分榜
             let standings = TEAMS.map(team => {
                 const s = getTeamStats(team);
                 return { team, ...s };
@@ -996,7 +1011,6 @@
             html += `</tbody></table></div>`;
             document.getElementById('standingsTable').innerHTML = html;
 
-            // 射手 & 助攻
             const { goals, assists } = getGoalStats();
             const scorerList = Object.keys(goals).map(id => ({ id, count: goals[id] })).sort((a, b) => b.count - a.count);
             const assistList = Object.keys(assists).map(id => ({ id, count: assists[id] })).sort((a, b) => b.count - a.count);
