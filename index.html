@@ -381,9 +381,7 @@
             width: 100%;
         }
 
-        /* ===== 球员管理 – 全新卡片式设计 ===== */
-
-        /* 每支球队的容器 */
+        /* ===== 球员管理 – 卡片式设计 ===== */
         .team-group {
             margin-bottom: 18px;
             background: rgba(248, 251, 247, 0.7);
@@ -396,7 +394,7 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
         }
 
-        /* ---- 球队名卡片 ---- */
+        /* 球队名卡片 */
         .team-name-card {
             display: flex;
             justify-content: space-between;
@@ -436,20 +434,25 @@
             gap: 10px;
         }
 
-        /* 球员卡片 */
+        /* ===== 关键修改：球员卡片宽度 ===== */
         .player-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: white;
             border-radius: 12px;
-            padding: 8px 14px 8px 18px;
+            padding: 8px 12px 8px 16px;
             border: 1.5px solid #dde8dd;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             transition: all 0.2s;
-            flex: 0 1 auto;
-            min-width: 80px;
+            /* 每行4个：宽度为25%减去gap */
+            flex: 0 0 calc(25% - 10px);
+            min-width: 0; /* 防止溢出 */
             max-width: 100%;
+            /* 文字溢出处理 */
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .player-card:hover {
             border-color: var(--gold);
@@ -460,7 +463,11 @@
             font-weight: 500;
             font-size: 14px;
             color: var(--text);
-            margin-right: 10px;
+            margin-right: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
         }
         .player-card .del-btn {
             background: none;
@@ -471,6 +478,7 @@
             padding: 0 2px;
             line-height: 1;
             transition: color 0.2s, transform 0.15s;
+            flex-shrink: 0;
         }
         .player-card .del-btn:hover {
             color: #c0392b;
@@ -601,19 +609,15 @@
             .btn { font-size: 13px; padding: 6px 14px; }
             .card { padding: 14px 12px; }
 
-            /* 球员卡片手机自适应 */
+            /* 手机端：每行2个球员卡片 */
             .player-card {
-                flex: 1 0 calc(50% - 8px);
-                min-width: 70px;
+                flex: 0 0 calc(50% - 8px);
             }
             .team-name-card .name { font-size: 15px; }
             .team-name-card .count { font-size: 12px; padding: 0 12px; }
         }
-        @media (min-width: 481px) {
-            .player-card {
-                flex: 0 1 auto;
-            }
-        }
+
+        /* 平板/桌面端保持每行4个，无需额外覆盖 */
     </style>
 </head>
 <body>
@@ -710,7 +714,7 @@
             </div>
         </section>
 
-        <!-- 球员管理（卡片式球队名+球员名） -->
+        <!-- 球员管理（卡片式球队名+球员名，每行4个） -->
         <section id="page-players" class="page">
             <div class="card">
                 <div class="card-title">👥 球员管理 <span class="badge" id="playerCount">0</span></div>
@@ -738,7 +742,7 @@
                     </div>
                 </div>
                 <hr class="divider">
-                <!-- 球队及球员列表将动态渲染到这里 -->
+                <!-- 球队及球员列表 -->
                 <div id="teamRoster"></div>
                 <hr class="divider">
                 <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
@@ -924,7 +928,7 @@
             container.innerHTML = html;
         }
 
-        // ===== 球员管理渲染（卡片式球队名 + 卡片式球员名） =====
+        // ===== 球员管理渲染（卡片式球队名 + 球员卡片） =====
         function renderPlayers() {
             const roster = document.getElementById('teamRoster');
             const count = document.getElementById('playerCount');
