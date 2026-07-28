@@ -24,6 +24,8 @@
             --text: #1e2a1e;
             --text-light: #4a5a4a;
             --border-light: #e2ebe2;
+            --red: #c0392b;
+            --green: #27ae60;
         }
 
         body {
@@ -62,24 +64,28 @@
             z-index: 200;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
             border-bottom: 3px solid var(--gold);
+            flex-wrap: nowrap;
+            overflow-x: auto;
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 10px;
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.75);
             background: none;
             border: none;
             padding: 4px 6px;
             cursor: pointer;
             transition: all 0.2s;
-            min-width: 44px;
+            min-width: 40px;
             border-radius: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .nav-item .icon {
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 1px;
             transition: transform 0.2s;
         }
@@ -382,6 +388,8 @@
         }
 
         /* ===== 球员管理 – 卡片式设计 ===== */
+
+        /* 每支球队的容器 */
         .team-group {
             margin-bottom: 18px;
             background: rgba(248, 251, 247, 0.7);
@@ -394,7 +402,7 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
         }
 
-        /* 球队名卡片 */
+        /* ---- 球队名卡片 ---- */
         .team-name-card {
             display: flex;
             justify-content: space-between;
@@ -427,29 +435,27 @@
             letter-spacing: 0.3px;
         }
 
-        /* ---- 球员卡片容器（Flex） ---- */
+        /* ---- 球员卡片网格 ---- */
         .players-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
 
-        /* 球员卡片 – 默认（桌面） */
+        /* 球员卡片 */
         .player-card {
-            flex: 0 0 calc(25% - 10px);
-            max-width: calc(25% - 10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: white;
             border-radius: 12px;
-            padding: 0 12px 0 16px;
+            padding: 8px 14px 8px 18px;
             border: 1.5px solid #dde8dd;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             transition: all 0.2s;
-            height: 42px;
-            overflow: hidden;
-            box-sizing: border-box;
+            flex: 0 1 auto;
+            min-width: 80px;
+            max-width: 100%;
         }
         .player-card:hover {
             border-color: var(--gold);
@@ -460,12 +466,7 @@
             font-weight: 500;
             font-size: 14px;
             color: var(--text);
-            margin-right: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-            min-width: 0;
+            margin-right: 10px;
         }
         .player-card .del-btn {
             background: none;
@@ -476,7 +477,6 @@
             padding: 0 2px;
             line-height: 1;
             transition: color 0.2s, transform 0.15s;
-            flex-shrink: 0;
         }
         .player-card .del-btn:hover {
             color: #c0392b;
@@ -591,7 +591,196 @@
             font-weight: 500;
         }
 
-        /* ===== 移动端适配（保持4列，优化显示3字名字） ===== */
+        /* ===== 财务模块 ===== */
+        .finance-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .finance-summary .item {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 12px 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--gold);
+        }
+        .finance-summary .item .label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        .finance-summary .item .amount {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .finance-summary .item.income .amount { color: var(--green); }
+        .finance-summary .item.expense .amount { color: var(--red); }
+        .finance-summary .item.balance .amount { color: var(--primary); }
+
+        .finance-entry-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .finance-entry-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8fbf7;
+            border-radius: 10px;
+            font-size: 14px;
+            border-left: 3px solid var(--gold);
+            transition: background 0.2s;
+        }
+        .finance-entry-item .info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        .finance-entry-item .name {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .finance-entry-item .remark {
+            color: var(--text-light);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px;
+        }
+        .finance-entry-item .amount {
+            font-weight: 700;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .finance-entry-item .del-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 4px;
+            flex-shrink: 0;
+        }
+        .finance-entry-item .del-btn:active { color: var(--red); }
+        .finance-entry-item.income { border-left-color: var(--green); }
+        .finance-entry-item.expense { border-left-color: var(--red); }
+
+        .finance-empty-tip {
+            color: #aaa;
+            text-align: center;
+            padding: 16px 0;
+            font-size: 14px;
+        }
+
+        .finance-action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .finance-action-row button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+        .finance-action-row button:active { transform: scale(0.96); }
+        .finance-action-row .btn-export { background: var(--primary); color: white; }
+        .finance-action-row .btn-reset { background: #e74c3c; color: white; }
+
+        /* 财务弹窗 */
+        .finance-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .finance-modal-overlay.active { display: flex; }
+        .finance-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .finance-modal h3 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .finance-modal label {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin: 12px 0 4px;
+        }
+        .finance-modal input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+        .finance-modal input:focus { border-color: var(--gold); }
+        .finance-modal .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .finance-modal .btn-row button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .finance-modal .btn-row .cancel {
+            background: #eee;
+            color: #555;
+        }
+        .finance-modal .btn-row .confirm {
+            background: var(--primary);
+            color: white;
+        }
+        .finance-modal .btn-row button:active { transform: scale(0.96); }
+
+        .finance-footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* ===== 移动端微调 ===== */
         @media (max-width: 480px) {
             .info-grid {
                 grid-template-columns: 1fr 1fr;
@@ -607,50 +796,28 @@
             .btn { font-size: 13px; padding: 6px 14px; }
             .card { padding: 14px 12px; }
 
-            /* 手机端：4列，但缩小内边距和字体，保证3个字可见 */
-            .players-grid {
-                gap: 6px;
-            }
+            /* 球员卡片手机自适应 */
             .player-card {
-                flex: 0 0 calc(25% - 6px);
-                max-width: calc(25% - 6px);
-                height: 34px;                /* 稍矮 */
-                padding: 0 4px 0 6px;         /* 减小左右内边距，腾出空间 */
-                border-radius: 10px;
-            }
-            .player-card .name {
-                font-size: 12px;
-                margin-right: 4px;
-                min-width: 36px;              /* 保证至少3个汉字（每个约12px） */
-                flex-shrink: 0;               /* 不允许压缩名字区域 */
-            }
-            .player-card .del-btn {
-                font-size: 12px;              /* 删除按钮缩小 */
-                padding: 0 2px;
+                flex: 1 0 calc(50% - 8px);
+                min-width: 70px;
             }
             .team-name-card .name { font-size: 15px; }
             .team-name-card .count { font-size: 12px; padding: 0 12px; }
-        }
 
-        /* 极窄屏（<380px）进一步优化 */
-        @media (max-width: 380px) {
-            .players-grid {
-                gap: 4px;
-            }
+            /* 财务汇总 */
+            .finance-summary { gap: 6px; }
+            .finance-summary .item .amount { font-size: 16px; }
+            .finance-entry-item { font-size: 13px; padding: 6px 10px; }
+            .finance-entry-item .remark { max-width: 60px; font-size: 11px; }
+            .finance-modal { padding: 18px 14px; }
+
+            /* 导航文字更小 */
+            .nav-item { font-size: 8px; min-width: 34px; }
+            .nav-item .icon { font-size: 16px; }
+        }
+        @media (min-width: 481px) {
             .player-card {
-                flex: 0 0 calc(25% - 4px);
-                max-width: calc(25% - 4px);
-                height: 30px;
-                padding: 0 3px 0 4px;
-                border-radius: 8px;
-            }
-            .player-card .name {
-                font-size: 10px;
-                min-width: 30px;
-                margin-right: 2px;
-            }
-            .player-card .del-btn {
-                font-size: 10px;
+                flex: 0 1 auto;
             }
         }
     </style>
@@ -664,14 +831,16 @@
         <button class="nav-item" data-page="admin"><span class="icon">✍️</span>录入</button>
         <button class="nav-item" data-page="players"><span class="icon">👥</span>球员</button>
         <button class="nav-item" data-page="stats"><span class="icon">📊</span>统计</button>
+        <button class="nav-item" data-page="finance"><span class="icon">💰</span>财务</button>
     </nav>
 
     <!-- ===== 页面容器 ===== -->
     <main id="app">
 
+        <!-- ============================================================ -->
         <!-- 首页 -->
+        <!-- ============================================================ -->
         <section id="page-home" class="page active">
-            <!-- 关键信息 -->
             <div class="card">
                 <div class="card-title">📋 荔中校友足球联队8月杯赛 - 关键信息</div>
                 <div class="highlight-box">🏆 8月杯赛 · 双循环共6轮</div>
@@ -702,7 +871,6 @@
                 </div>
             </div>
 
-            <!-- 赛事预告 -->
             <div class="card">
                 <div class="card-title">📢 赛事预告 <span class="badge">最新</span></div>
                 <div id="announcementList"></div>
@@ -712,7 +880,6 @@
                 </div>
             </div>
 
-            <!-- 底部图片（3张一行） -->
             <div class="footer-gallery">
                 <div class="title">📸 荔中联队 · 精彩瞬间</div>
                 <div class="gallery-grid">
@@ -732,7 +899,9 @@
             </div>
         </section>
 
+        <!-- ============================================================ -->
         <!-- 赛程 -->
+        <!-- ============================================================ -->
         <section id="page-schedule" class="page">
             <div class="card">
                 <div class="card-title">📅 详细赛程表</div>
@@ -740,7 +909,9 @@
             </div>
         </section>
 
+        <!-- ============================================================ -->
         <!-- 数据录入 -->
+        <!-- ============================================================ -->
         <section id="page-admin" class="page">
             <div class="card">
                 <div class="card-title">✍️ 数据录入台</div>
@@ -749,7 +920,9 @@
             </div>
         </section>
 
+        <!-- ============================================================ -->
         <!-- 球员管理 -->
+        <!-- ============================================================ -->
         <section id="page-players" class="page">
             <div class="card">
                 <div class="card-title">👥 球员管理 <span class="badge" id="playerCount">0</span></div>
@@ -777,7 +950,6 @@
                     </div>
                 </div>
                 <hr class="divider">
-                <!-- 球队及球员列表 -->
                 <div id="teamRoster"></div>
                 <hr class="divider">
                 <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
@@ -789,7 +961,9 @@
             </div>
         </section>
 
+        <!-- ============================================================ -->
         <!-- 统计 -->
+        <!-- ============================================================ -->
         <section id="page-stats" class="page">
             <div class="card">
                 <div class="card-title">🏆 积分榜</div>
@@ -804,18 +978,96 @@
                 <div id="assistRank"></div>
             </div>
         </section>
+
+        <!-- ============================================================ -->
+        <!-- 财务 -->
+        <!-- ============================================================ -->
+        <section id="page-finance" class="page">
+            <div class="card">
+                <div class="card-title">💰 财务明细</div>
+
+                <!-- 汇总 -->
+                <div class="finance-summary">
+                    <div class="item income">
+                        <div class="label">💰 总收入</div>
+                        <div class="amount" id="finTotalIncome">0</div>
+                    </div>
+                    <div class="item expense">
+                        <div class="label">📤 总支出</div>
+                        <div class="amount" id="finTotalExpense">0</div>
+                    </div>
+                    <div class="item balance">
+                        <div class="label">📊 结余</div>
+                        <div class="amount" id="finBalance">0</div>
+                    </div>
+                </div>
+
+                <!-- 收入 -->
+                <div style="margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-weight:700; font-size:16px; color:var(--primary);">📥 收入</span>
+                        <button class="btn btn-sm" onclick="openFinanceModal('income')">＋ 添加</button>
+                    </div>
+                    <div class="finance-entry-list" id="finIncomeList">
+                        <div class="finance-empty-tip">暂无收入记录</div>
+                    </div>
+                </div>
+
+                <!-- 支出 -->
+                <div style="margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-weight:700; font-size:16px; color:var(--primary);">📤 支出</span>
+                        <button class="btn btn-sm" onclick="openFinanceModal('expense')">＋ 添加</button>
+                    </div>
+                    <div class="finance-entry-list" id="finExpenseList">
+                        <div class="finance-empty-tip">暂无支出记录</div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="finance-action-row">
+                    <button class="btn-export" onclick="exportFinance()">📋 导出 / 打印</button>
+                    <button class="btn-reset" onclick="resetFinance()">🗑️ 清空数据</button>
+                </div>
+                <div class="finance-footer-note">
+                    数据保存在本地 · 导出后可分享给队友查看
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- ========================================== -->
-    <!-- ===== JavaScript 核心逻辑 ===== -->
+    <!-- ============================================================ -->
+    <!-- 财务弹窗 -->
+    <!-- ============================================================ -->
+    <div class="finance-modal-overlay" id="finModalOverlay">
+        <div class="finance-modal">
+            <h3 id="finModalTitle">添加收入</h3>
+            <label>项目名称</label>
+            <input type="text" id="finEntryName" placeholder="如：报名费、场地费...">
+            <label>金额（元）</label>
+            <input type="number" id="finEntryAmount" placeholder="0" min="0" step="0.01">
+            <label>备注（可选）</label>
+            <input type="text" id="finEntryRemark" placeholder="如：共10人...">
+            <div class="btn-row">
+                <button class="cancel" onclick="closeFinanceModal()">取消</button>
+                <button class="confirm" onclick="saveFinanceEntry()">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JavaScript -->
+    <!-- ============================================================ -->
     <script>
-        // ---------- 常量 ----------
+        // =============================================================
+        // 1. 主网站原有逻辑（赛程、球员、统计等）
+        // =============================================================
         const TEAMS = ['鱼腩队', '先锋队', '快乐队', '战魂队'];
         const TEAM_SHORT = { '鱼腩队': '鱼腩', '先锋队': '先锋', '快乐队': '快乐', '战魂队': '战魂' };
         const DATA_VERSION = 'v3';
         const VENUE = '夏街';
 
-        // ---------- 存储工具 ----------
         function loadData(key, def) {
             try { const d = localStorage.getItem('lc_' + key); return d ? JSON.parse(d) : def; } catch (e) { return def; }
         }
@@ -823,12 +1075,10 @@
             localStorage.setItem('lc_' + key, JSON.stringify(data));
         }
 
-        // ---------- 数据模型 ----------
         let players = loadData('players', []);
         let matches = loadData('matches', []);
         let announcements = loadData('announcements', ['⚡ 8月3日（周一）揭幕战：鱼腩队 vs 先锋队', '🏅 8月21日（周五）颁奖之夜']);
 
-        // ---------- 初始化赛程 ----------
         function initSchedule() {
             const storedVersion = localStorage.getItem('lc_version');
             let needReset = false;
@@ -871,7 +1121,6 @@
         }
         initSchedule();
 
-        // ---------- 辅助函数 ----------
         function getPlayerName(id) {
             const p = players.find(x => x.id === id);
             return p ? p.name : '未知';
@@ -914,7 +1163,6 @@
             return { goals, assists };
         }
 
-        // ---------- 渲染函数 ----------
         function renderSchedule() {
             const container = document.getElementById('scheduleList');
             let html = `<div class="table-wrap"><table>
@@ -967,7 +1215,6 @@
             const roster = document.getElementById('teamRoster');
             const count = document.getElementById('playerCount');
             count.textContent = players.length;
-
             const sel = document.getElementById('transferPlayerSelect');
             const currentVal = sel.value;
             sel.innerHTML = '<option value="">-- 选择球员 --</option>';
@@ -975,7 +1222,6 @@
                 sel.innerHTML += `<option value="${p.id}">${p.name} (${TEAM_SHORT[p.team] || p.team})</option>`;
             });
             sel.value = currentVal;
-
             let html = '';
             TEAMS.forEach(team => {
                 const list = getTeamPlayers(team);
@@ -1058,7 +1304,6 @@
             container.innerHTML = html;
         }
 
-        // ---------- 编辑器 ----------
         function openMatchEditor(matchId) {
             const m = matches.find(x => x.id === matchId);
             if (!m) return;
@@ -1154,7 +1399,6 @@
             renderAll();
         }
 
-        // ---------- 球员操作 ----------
         function addPlayer() {
             const name = document.getElementById('playerNameInput').value.trim();
             const team = document.getElementById('playerTeamSelect').value;
@@ -1185,7 +1429,6 @@
             renderAll();
         }
 
-        // ---------- 公告 ----------
         function addAnnounce() {
             const input = document.getElementById('announceInput');
             if (!input.value.trim()) return;
@@ -1200,9 +1443,6 @@
             renderAnnouncements();
         }
 
-        // =====================================================
-        // ===== 数据导出 / 导入 =====
-        // =====================================================
         function exportData() {
             const data = {
                 version: DATA_VERSION,
@@ -1250,17 +1490,186 @@
             event.target.value = '';
         }
 
-        // ---------- 导航 ----------
+        // =============================================================
+        // 2. 财务模块（独立数据）
+        // =============================================================
+        let financeData = { income: [], expense: [] };
+        let financeCurrentType = 'income';
+
+        function loadFinance() {
+            try {
+                const raw = localStorage.getItem('lc_finance');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.income && parsed.expense) financeData = parsed;
+                }
+            } catch (e) {}
+        }
+        function saveFinance() {
+            localStorage.setItem('lc_finance', JSON.stringify(financeData));
+        }
+
+        function renderFinance() {
+            const incomeList = document.getElementById('finIncomeList');
+            if (financeData.income.length === 0) {
+                incomeList.innerHTML = '<div class="finance-empty-tip">暂无收入记录</div>';
+            } else {
+                incomeList.innerHTML = financeData.income.map(item => `
+                    <div class="finance-entry-item income">
+                        <div class="info">
+                            <span class="name">${escapeHtml(item.name)}</span>
+                            ${item.remark ? `<span class="remark">${escapeHtml(item.remark)}</span>` : ''}
+                        </div>
+                        <span class="amount">+${item.amount}</span>
+                        <button class="del-btn" onclick="deleteFinanceEntry('income', '${item.id}')">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            const expenseList = document.getElementById('finExpenseList');
+            if (financeData.expense.length === 0) {
+                expenseList.innerHTML = '<div class="finance-empty-tip">暂无支出记录</div>';
+            } else {
+                expenseList.innerHTML = financeData.expense.map(item => `
+                    <div class="finance-entry-item expense">
+                        <div class="info">
+                            <span class="name">${escapeHtml(item.name)}</span>
+                            ${item.remark ? `<span class="remark">${escapeHtml(item.remark)}</span>` : ''}
+                        </div>
+                        <span class="amount">-${item.amount}</span>
+                        <button class="del-btn" onclick="deleteFinanceEntry('expense', '${item.id}')">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            const totalIncome = financeData.income.reduce((s, i) => s + i.amount, 0);
+            const totalExpense = financeData.expense.reduce((s, i) => s + i.amount, 0);
+            document.getElementById('finTotalIncome').textContent = totalIncome.toFixed(0);
+            document.getElementById('finTotalExpense').textContent = totalExpense.toFixed(0);
+            document.getElementById('finBalance').textContent = (totalIncome - totalExpense).toFixed(0);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        }
+
+        function openFinanceModal(type) {
+            financeCurrentType = type;
+            document.getElementById('finModalTitle').textContent = type === 'income' ? '📥 添加收入' : '📤 添加支出';
+            document.getElementById('finEntryName').value = '';
+            document.getElementById('finEntryAmount').value = '';
+            document.getElementById('finEntryRemark').value = '';
+            document.getElementById('finModalOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('finEntryName').focus(), 100);
+        }
+
+        function closeFinanceModal() {
+            document.getElementById('finModalOverlay').classList.remove('active');
+        }
+        document.getElementById('finModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeFinanceModal();
+        });
+
+        function saveFinanceEntry() {
+            const name = document.getElementById('finEntryName').value.trim();
+            const amount = parseFloat(document.getElementById('finEntryAmount').value);
+            const remark = document.getElementById('finEntryRemark').value.trim();
+            if (!name) { alert('请输入项目名称'); return; }
+            if (!amount || amount <= 0) { alert('请输入有效的金额'); return; }
+            financeData[financeCurrentType].push({
+                id: generateId(),
+                name: name,
+                amount: amount,
+                remark: remark || ''
+            });
+            saveFinance();
+            renderFinance();
+            closeFinanceModal();
+        }
+
+        function deleteFinanceEntry(type, id) {
+            if (!confirm('确认删除此记录？')) return;
+            financeData[type] = financeData[type].filter(item => item.id !== id);
+            saveFinance();
+            renderFinance();
+        }
+
+        function exportFinance() {
+            const totalIncome = financeData.income.reduce((s, i) => s + i.amount, 0);
+            const totalExpense = financeData.expense.reduce((s, i) => s + i.amount, 0);
+            const balance = totalIncome - totalExpense;
+
+            let text = '═══════════════════════════════\n';
+            text += '  荔中联队 · 8月杯赛财务明细\n';
+            text += '═══════════════════════════════\n\n';
+            text += '【收入】\n';
+            if (financeData.income.length === 0) text += '  (无)\n';
+            else financeData.income.forEach((item, i) => {
+                text += `  ${i+1}. ${item.name}  ${item.amount}元${item.remark ? '  ('+item.remark+')' : ''}\n`;
+            });
+            text += `  合计：${totalIncome}元\n\n`;
+            text += '【支出】\n';
+            if (financeData.expense.length === 0) text += '  (无)\n';
+            else financeData.expense.forEach((item, i) => {
+                text += `  ${i+1}. ${item.name}  ${item.amount}元${item.remark ? '  ('+item.remark+')' : ''}\n`;
+            });
+            text += `  合计：${totalExpense}元\n\n`;
+            text += '───────────────────────────────\n';
+            text += `  总收入：${totalIncome}元\n`;
+            text += `  总支出：${totalExpense}元\n`;
+            text += `  结余：  ${balance}元\n`;
+            text += '───────────────────────────────\n\n';
+            text += '  荔中校友足球联队 · 组委会\n';
+            text += `  ${new Date().toLocaleDateString()}\n`;
+
+            const printWindow = window.open('', '_blank', 'width=500,height=600');
+            if (printWindow) {
+                printWindow.document.write(`
+                    <html><head><title>财务明细</title>
+                    <style>body{font-family:monospace;padding:30px;line-height:1.8;white-space:pre-wrap;max-width:500px;margin:0 auto;}</style>
+                    </head><body>${text}</body></html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('财务数据已复制到剪贴板，可粘贴发送给队友。');
+                }).catch(() => {
+                    alert('请使用打印功能，或手动复制以上内容。');
+                });
+            }
+        }
+
+        function resetFinance() {
+            if (!confirm('确认清空所有财务数据？此操作不可恢复！')) return;
+            if (!confirm('再次确认：清空所有收入与支出记录？')) return;
+            financeData.income = [];
+            financeData.expense = [];
+            saveFinance();
+            renderFinance();
+        }
+
+        // =============================================================
+        // 3. 导航 & 渲染控制
+        // =============================================================
         function navigate(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+
             if (page === 'home') renderAnnouncements();
             if (page === 'schedule') renderSchedule();
             if (page === 'admin') renderAdmin();
             if (page === 'players') renderPlayers();
             if (page === 'stats') renderStats();
+            if (page === 'finance') { loadFinance(); renderFinance(); }
         }
 
         function renderAll() {
@@ -1273,7 +1682,6 @@
             }
         }
 
-        // ---------- 事件绑定 ----------
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', function() {
                 navigate(this.dataset.page);
@@ -1297,6 +1705,12 @@
         window.removeAnnounce = removeAnnounce;
         window.exportData = exportData;
         window.importData = importData;
+        window.openFinanceModal = openFinanceModal;
+        window.closeFinanceModal = closeFinanceModal;
+        window.saveFinanceEntry = saveFinanceEntry;
+        window.deleteFinanceEntry = deleteFinanceEntry;
+        window.exportFinance = exportFinance;
+        window.resetFinance = resetFinance;
         window.renderAll = renderAll;
         window.navigate = navigate;
     </script>
